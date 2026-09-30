@@ -48,11 +48,9 @@ export const Select = ({
               optionValue = String(opt);
               optionLabel = String(opt);
             } else if (typeof opt === 'object' && opt !== null) {
-              optionValue = opt.value || opt.country || opt.name || opt.id || String(idx);
-              optionLabel = opt.label || opt.country || opt.name || optionValue;
+              optionValue = String(opt.value ?? opt.country ?? opt.name ?? opt.id ?? idx);
+              optionLabel = String(opt.label ?? opt.country ?? opt.name ?? optionValue);
             }
-
-            if (!optionValue && !optionLabel) return null;
 
             return (
               <option key={`${optionValue}-${idx}`} value={optionValue}>

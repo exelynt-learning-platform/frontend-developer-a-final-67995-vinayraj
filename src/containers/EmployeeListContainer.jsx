@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { EmployeeTable } from '../components/employee/EmployeeTable/EmployeeTable';
 import { Modal } from '../components/ui/Modal/Modal';
@@ -40,19 +40,19 @@ export const EmployeeListContainer = () => {
     dispatch(fetchCountries());
   }, [dispatch]);
 
-  // Client-side quick filter on employee list
-  const filteredEmployees = employees.filter((emp) => {
-    if (!searchQuery) return true;
+  // Memoized filter calculation for list rendering optimization
+  const filteredEmployees = useMemo(() => {
+    if (!searchQuery) return employees;
     const query = searchQuery.toLowerCase().trim();
-    return (
+    return employees.filter((emp) => (
       (emp.name && emp.name.toLowerCase().includes(query)) ||
       (emp.email && emp.email.toLowerCase().includes(query)) ||
       (emp.country && emp.country.toLowerCase().includes(query)) ||
       (emp.state && emp.state.toLowerCase().includes(query)) ||
       (emp.mobile && emp.mobile.includes(query)) ||
       (emp.id && String(emp.id).includes(query))
-    );
-  });
+    ));
+  }, [employees, searchQuery]);
 
   const handleEdit = (employee) => {
     dispatch(openEditModal(employee));
